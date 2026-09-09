@@ -3,59 +3,42 @@ from telethon import TelegramClient, events
 
 api_id = 34989957
 api_hash = '667fedf082c996e42bf0840485f79582'
-BOT_DESTINO = 'miembroextrabot'  # sin @
+BOT_DESTINO = 'streamtestx3_bot'  # @streamtestx3_bot disney solamente
 client = TelegramClient('session', api_id, api_hash)
 
 client = TelegramClient('session', api_id, api_hash)
 
-# 🔥 Diccionario para manejar usuarios correctamente
 pendientes = {}
 
-# 📌 MENSAJE DE AYUDA
 MENSAJE_AYUDA = """🤖 Bienvenido
 
 Comandos disponibles:
 
-/code correo
-/link correo
-/activarTV correo
+/codedisney email@mail.com
 
 Ejemplo:
-/code ejemplo@gmail.com
+/codedisney ejemplo@gmail.com
 """
 
-# 🟢 HELP
+#Ayuda al cliente baboso
 @client.on(events.NewMessage(pattern=r'^/(start|help)$'))
 async def ayuda(event):
     await event.reply(MENSAJE_AYUDA)
 
-# 🔧 Función general para enviar comandos
 async def procesar(event, comando):
     texto = event.pattern_match.group(1)
     user_id = event.sender_id
 
-    # Guardamos usuario con el comando que pidió
     pendientes[user_id] = True
 
     await client.send_message(BOT_DESTINO, f"/{comando} {texto}")
     await event.reply(f"⏳ Procesando {comando}...")
 
-# 🟢 /code
-@client.on(events.NewMessage(pattern=r'^/code (.+)'))
+@client.on(events.NewMessage(pattern=r'^/codedisney (.+)'))
 async def code(event):
     await procesar(event, "code")
 
-# 🟢 /link
-@client.on(events.NewMessage(pattern=r'^/link (.+)'))
-async def link(event):
-    await procesar(event, "link")
-
-# 🟢 /activarTV
-@client.on(events.NewMessage(pattern=r'^/activarTV (.+)'))
-async def tv(event):
-    await procesar(event, "activarTV")
-
-# 🟢 RESPUESTA DEL BOT
+#RESPUESTA DEL BOT - forma por si tiene varias solicitudes 
 @client.on(events.NewMessage(from_users=BOT_DESTINO))
 async def respuesta(event):
     if pendientes:
@@ -64,7 +47,7 @@ async def respuesta(event):
 
         await client.send_message(user_id, f"📩 Resultado:\n{event.raw_text}")
 
-        # Eliminamos ese usuario (ya atendido)
+        # Eliminamos usuario (ya atendido)
         pendientes.pop(user_id, None)
 
 async def main():
